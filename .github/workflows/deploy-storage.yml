@@ -8,6 +8,10 @@ on:
       - main
   workflow_dispatch:
 
+env:
+  # Common
+  JSON_DIR: data/json/
+
 jobs:
     deploy:
         runs-on: ubuntu-latest
@@ -28,9 +32,15 @@ jobs:
           run: |
             gcloud auth activate-service-account --key-file=temp-sa.json
 
+        - name: Create GCS Bucket
+          run: |
+            if ! gsutil ls ${{ secrets.GCS_BUCKET_PATH }}; then
+              gsutil mb -p ${{ secrets.PROJECT_ID }} -c ${{ secrets.STORAGE_CLASS }} -l ${{ secrets.BUCKET_REJION }} -b off ${{ secrets.GCS_BUCKET_PATH }}
+            fi
+
         - name: Upload JSON data to GCS
           run: |
-            gsutil -m rsync -r -d data/json/ ${{ secrets.GCS_BUCKET_PATH }}
+            gsutil -m rsync -r -d ${{ env.JSON_DIR }} ${{ secrets.GCS_BUCKET_PATH }}/${{ env.JSON_DIR }}
 
         - name: Post Processing
           run : |
