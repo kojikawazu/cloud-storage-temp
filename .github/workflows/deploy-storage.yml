@@ -35,7 +35,7 @@ jobs:
         - name: Create GCS Bucket
           run: |
             if ! gsutil ls ${{ secrets.GCS_BUCKET_PATH }}; then
-              gsutil mb -p ${{ secrets.PROJECT_ID }} -c ${{ secrets.STORAGE_CLASS }} -l ${{ secrets.BUCKET_REJION }} -b off ${{ secrets.GCS_BUCKET_PATH }} --uniform-bucket-level-access || exit 1
+              gsutil mb -p ${{ secrets.PROJECT_ID }} -c ${{ secrets.STORAGE_CLASS }} -l ${{ secrets.BUCKET_REJION }} -b off ${{ secrets.GCS_BUCKET_PATH }} || exit 1
             fi
 
         - name: Upload JSON data to GCS
